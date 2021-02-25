@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>865451020274-0q5j1ts2ppbs71icbpggnalcug5bfhg8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.865451020274-0q5j1ts2ppbs71icbpggnalcug5bfhg8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBpge1QMYTKjKdMssmvcZPJJFFJk4mLblg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>865451020274</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>faceapp.grepiu.com.flutterFaceApp</string>
+	<key>PROJECT_ID</key>
+	<string>faceapp-c81a6</string>
+	<key>STORAGE_BUCKET</key>
+	<string>faceapp-c81a6.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:865451020274:ios:81d20c9aa8f49d4f53656b</string>
+	<key>DATABASE_URL</key>
+	<string>https://faceapp-c81a6.firebaseio.com</string>
+</dict>
+</plist>

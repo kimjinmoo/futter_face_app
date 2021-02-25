@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "865451020274",
+    "firebase_url": "https://faceapp-c81a6.firebaseio.com",
+    "project_id": "faceapp-c81a6",
+    "storage_bucket": "faceapp-c81a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865451020274:android:9dda7e30871ca7b953656b",
+        "android_client_info": {
+          "package_name": "faceapp.grepiu.com.flutter_face_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865451020274-8jv9bl89g6ll49n869jj6rfna1utsd3l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiRGME_RnSEtcEx_OsKY0NSfrRCTdoKME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865451020274-8jv9bl89g6ll49n869jj6rfna1utsd3l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "865451020274-0q5j1ts2ppbs71icbpggnalcug5bfhg8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "faceapp.grepiu.com.flutterFaceApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

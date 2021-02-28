@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_face_app/container/main_screen.dart';
 import 'package:flutter_face_app/empty_camera.dart';
 import 'package:flutter_face_app/service/api_service.dart';
+import 'package:flutter_face_app/service/api_service.dart';
 
 final FirebaseMessaging messaging = FirebaseMessaging();
 
@@ -53,8 +54,8 @@ class _SplashState extends State<Splash>
     super.dispose();
   }
 
-  void permission() {
-    messaging.requestNotificationPermissions(
+  void permission() async {
+    await messaging.requestNotificationPermissions(
         IosNotificationSettings(sound: true, badge: true, alert: true));
     messaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
@@ -64,11 +65,8 @@ class _SplashState extends State<Splash>
 
 
   init() async {
-    print("init!!");
-    if (Platform.isIOS) permission();
-    print("init -->");
+    if (Platform.isIOS)  permission();
     ApiService.init(await messaging.getToken());
-    print("init finished");
     // camera get
     List<CameraDescription> cameras = await availableCameras();
     // 지연

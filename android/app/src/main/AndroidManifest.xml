@@ -8,7 +8,7 @@
 
     <application
         android:name="faceapp.grepiu.com.flutter_face_app.FCMApplication"
-        android:label="flutter_face_app"
+        android:label="우리어때"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

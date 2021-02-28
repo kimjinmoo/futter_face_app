@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +9,10 @@ import 'package:flutter_face_app/core/camera.dart';
 import 'package:flutter_face_app/domain/image_engine_response.dart';
 import 'package:flutter_face_app/domain/user.dart';
 import 'package:flutter_face_app/service/api_service.dart';
-import 'package:flutter_face_app/utils/ad_manager.dart';
 import 'package:flutter_face_app/utils/admob.dart';
+import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:flutter_face_app/utils/rank_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 FirebaseMessaging messaging = FirebaseMessaging();
 
@@ -42,6 +40,12 @@ class MainScreenState extends State<MainScreen> with RouteAware {
     Ads.showBannerAd();
   }
 
+  @override
+  void dispose() {
+    Ads.hideBannerAd();
+    super.dispose();
+  }
+
   void init() async {
     User user = await ApiService.getUser();
     // 싱크 초기화
@@ -53,12 +57,8 @@ class MainScreenState extends State<MainScreen> with RouteAware {
     });
   }
 
-  void showInSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  }
-
   void onRef() async {
-    showInSnackBar("분석이 완료 되어 리로드 됩니다.");
+    NoticeUtils.showSnackBar(_scaffoldKey, "분석이 완료 되어 리로드 됩니다.");
     await ApiService.syncImageEngine(uid);
 
     List<ImageEngineResponse> list = await ApiService.fetch();
@@ -83,6 +83,17 @@ class MainScreenState extends State<MainScreen> with RouteAware {
     });
   }
 
+  _launchURL() async {
+    const url = 'https://flutter.dev';
+    print("call URL");
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print("error ");
+      throw 'Could not launch $url';
+    }
+  }
+
   void open(MaterialPageRoute pageRoute) {
     // Ads.hideBannerAd();
     Navigator.push(context, pageRoute).then((value) {
@@ -95,18 +106,77 @@ class MainScreenState extends State<MainScreen> with RouteAware {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+          drawerEnableOpenDragGesture: false,
+          // endDrawerEnableOpenDragGesture: false,
+          endDrawer: Drawer(
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Text(uid),
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                  ),
+                ),
+                ListTile(
+                  title: Text('개발자 홈페이지'),
+                  onTap: () {
+                    _launchURL();
+                  },
+                ),
+                ListTile(
+                  title: Text('사용된 오픈소스'),
+                  onTap: () {
+
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                Divider(),
+                ListTile(
+                  title: Text('1.0.0'),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+              ],
+            ),
+          ),
           key: _scaffoldKey,
           body: SafeArea(
             child: Column(
               children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  alignment: Alignment.topLeft,
-                  height: 75,
-                  child: Text(
-                    "우리 어때?",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Container(
+                      padding: EdgeInsets.all(20),
+                      alignment: Alignment.topLeft,
+                      height: 75,
+                      child: Text(
+                        "우리 어때?",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                    )),
+                    InkWell(
+                      child: Container(
+                        height: 40,
+                        margin: EdgeInsets.only(left: 20, right: 20),
+                        child: Center(
+                          child: Text(
+                            "추가정보",
+                            style: TextStyle(fontSize: 16, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      },
+                    )
+                  ],
                 ),
                 Expanded(
                     child: FutureBuilder<List<ImageEngineResponse>>(
@@ -134,8 +204,63 @@ class MainScreenState extends State<MainScreen> with RouteAware {
     );
   }
 
+  Widget emptyPicture() {
+    return Card(
+        margin: EdgeInsets.only(left: 18, right: 18, bottom: 24),
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              color: Colors.transparent,
+              child: Text(
+                "사진을 찍어보세요!",
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+                child: Column(
+              children: [
+                SizedBox(
+                  height: 18,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.55,
+                  child: Image.asset(
+                    "assets/images/couple.jpg",
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+                // ClipRRect(
+                //     borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                //     child:
+                // ),
+                SizedBox(
+                  height: 8,
+                ),
+                Expanded(
+                    child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      "사진을 찍고 애정도를 측정해보세요\n사진은 다양하게 공유 할 수 있습니다.",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ))
+              ],
+            ))
+          ],
+        ));
+  }
+
   showDeleteAlertDialog(String id) {
     Widget btnDelete = FlatButton(
+        color: Colors.red,
         onPressed: () async {
           await ApiService.delete(id).then((value) => setState(() {}));
           setState(() {});
@@ -164,77 +289,29 @@ class MainScreenState extends State<MainScreen> with RouteAware {
         });
   }
 
-  ListView _cardListView(data) {
-    return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return SizedBox(
-              width: MediaQuery.of(context).size.width * 0.90,
-              height: MediaQuery.of(context).size.height * 0.55,
-              child: SlidingCard(
-                showDeleteHandler: () =>
-                    showDeleteAlertDialog(data[index].id),
-                showDetailHandler: () => open(MaterialPageRoute(
-                    builder: (context) =>
-                        MainDetail(imageEngineResponse: data[index]))),
-                imageUrl: data[index].imageUrl,
-                comment: '${RankUtils.parser(data[index].json).comment}',
-              ));
-          // return Container(
-          //   height: 350,
-          //   child: GestureDetector(
-          //     onTap: () {
-          //       open(MaterialPageRoute(builder: (context) => MainDetail(imageEngineResponse: data[index])));
-          //     },
-          //     child: Card(
-          //       color: Colors.amber,
-          //       child: Column(
-          //         children: [
-          //           Align(
-          //             alignment: Alignment.topRight,
-          //             child: RaisedButton.icon(
-          //               label: Text("삭제"),
-          //               color: Colors.amber,
-          //               icon: Icon(Icons.remove),
-          //               onPressed: () async {
-          //                 await ApiService.delete(data[index].id)
-          //                     .then((value) => setState(() {}));
-          //                 setState(() {});
-          //               },
-          //             ),
-          //           ),
-          //           Expanded(
-          //               child: RotatedBox(
-          //             quarterTurns: 1,
-          //             child: CachedNetworkImage(
-          //               imageUrl: data[index].imageUrl,
-          //               imageBuilder: (context, imageProvider) => Container(
-          //                 decoration: BoxDecoration(
-          //                   image: DecorationImage(
-          //                     image: imageProvider,
-          //                     fit: BoxFit.fitWidth,
-          //                   ),
-          //                 ),
-          //               ),
-          //               placeholder: (context, url) =>
-          //                   CircularProgressIndicator(),
-          //               errorWidget: (context, url, error) => Icon(Icons.error),
-          //             ),
-          //           )),
-          //           Container(
-          //             margin: EdgeInsets.all(10),
-          //             child: Text(
-          //               '${RankUtils.parser(data[index].json)}',
-          //               style: TextStyle(color: Colors.black26),
-          //             ),
-          //           )
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // );
-        });
+  Widget _cardListView(data) {
+    return data.length > 0
+        ? ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  height: MediaQuery.of(context).size.height * 0.55,
+                  child: SlidingCard(
+                    showDeleteHandler: () =>
+                        showDeleteAlertDialog(data[index].id),
+                    showDetailHandler: () => open(MaterialPageRoute(
+                        builder: (context) =>
+                            MainDetail(imageEngineResponse: data[index]))),
+                    imageUrl: data[index].imageUrl,
+                    comment: '${RankUtils.parser(data[index].json).comment}',
+                  ));
+            })
+        : SizedBox(
+            width: MediaQuery.of(context).size.width * 0.90,
+            height: MediaQuery.of(context).size.height * 0.55,
+            child: emptyPicture());
   }
 
   Widget _fab() {

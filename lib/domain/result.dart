@@ -34,14 +34,14 @@ class Result {
 
   Result isNoPeople() {
     this.comment = "사람으로 판단이 안되는군요..!!";
-    this.affectionStatus = "셀카라면...분석이 안되는 얼굴입니다.";
+    this.affectionStatus = "사람이 아닙니다..!";
     return this;
   }
 
   Result isSingle(RankResponse rankResponse) {
     this.leftPeople = PeopleResult().init(rankResponse);
     this.comment = "[${leftPeople.emotionStatus}] 셀카를 찍으셨군요?";
-    this.affectionStatus = "혼자 셀카 찍으니까 좋죠!!";
+    this.affectionStatus = "혼자 셀카를 찍으셨군요!";
     return this;
   }
 

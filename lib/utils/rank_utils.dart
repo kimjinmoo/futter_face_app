@@ -21,9 +21,6 @@ class RankUtils {
               (RankResponse a, RankResponse b) =>
                   a.box[0].toString().compareTo(b.box[0].toString());
           response.people.sort(rankComparator);
-          response.people.forEach((element) {
-            print('two : ${element.box[0]}');
-          });
           return Result().isCouple(response.people[0], response.people[1]);
         default:
           return Result().isAboveThree();

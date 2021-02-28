@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
+import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_face_app/domain/image_engine_response.dart';
 import 'package:flutter_face_app/domain/user.dart';
 import 'package:flutter_face_app/service/api_service.dart';
+import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:image/image.dart' as img;
-import 'package:exif/exif.dart';
 
 class CameraHome extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -76,7 +77,7 @@ class _CameraHomeState extends State<CameraHome>
             heroTag: "btn_take1",
             icon: Icon(Icons.flip_camera_android),
             backgroundColor: Colors.blue,
-            label: isFront?Text("전면"):Text("후방"),
+            label: isFront ? Text("전면") : Text("후방"),
             onPressed: () {
               onNewCameraSelected(widget.cameras);
               setState(() {});
@@ -92,8 +93,9 @@ class _CameraHomeState extends State<CameraHome>
             label: Text("찍기"),
             onPressed: isProgress
                 ? () {
-              showInSnackBar('분석중입니다..잠시만 기다려줴요.');
-            }
+                    NoticeUtils.showSnackBar(
+                        _scaffoldKey, '분석중입니다..잠시만 기다려줴요.');
+                  }
                 : onTakePictureButtonPressed,
           ),
         )
@@ -123,7 +125,9 @@ class _CameraHomeState extends State<CameraHome>
                   child: Column(
                     children: [
                       Expanded(
-                        child: _cameraPreviewWidget(),
+                        child: Center(
+                          child: _cameraPreviewWidget(),
+                        ),
                       ),
                     ],
                   ),
@@ -160,15 +164,14 @@ class _CameraHomeState extends State<CameraHome>
   }
 
   void onCaptureOrientationLockButtonPressed() async {
-    print("call orientation");
     if (controller != null) {
       if (controller.value.isCaptureOrientationLocked) {
         await controller.unlockCaptureOrientation();
-        showInSnackBar('Capture orientation unlocked');
+        NoticeUtils.showSnackBar(_scaffoldKey, "회전 잠김");
       } else {
         await controller.lockCaptureOrientation();
-        showInSnackBar(
-            'Capture orientation locked to ${controller.value.lockedCaptureOrientation.toString().split('.').last}');
+        NoticeUtils.showSnackBar(_scaffoldKey,
+            '회전 잠김 ${controller.value.lockedCaptureOrientation.toString().split('.').last}');
       }
     }
   }
@@ -217,10 +220,6 @@ class _CameraHomeState extends State<CameraHome>
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
-  void showInSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  }
-
   void onNewCameraSelected(List<CameraDescription> cameras) async {
     CameraDescription cameraDescription;
 
@@ -228,16 +227,13 @@ class _CameraHomeState extends State<CameraHome>
       await controller.dispose();
     }
 
-    print("isFront :" + isFront.toString());
-    if(isFront) {
-      print("back");
+    if (isFront) {
       cameraDescription = cameras
           .firstWhere((el) => el.lensDirection == CameraLensDirection.back);
       setState(() {
         isFront = false;
       });
     } else {
-      print("front");
       cameraDescription = cameras
           .firstWhere((el) => el.lensDirection == CameraLensDirection.front);
       setState(() {
@@ -251,7 +247,8 @@ class _CameraHomeState extends State<CameraHome>
     controller.addListener(() {
       if (mounted) setState(() {});
       if (controller.value.hasError) {
-        showInSnackBar('Camera error ${controller.value.errorDescription}');
+        NoticeUtils.showSnackBar(_scaffoldKey,
+            '카메라에 문제가 있습니다. 메시지 : ${controller.value.errorDescription}');
       }
     });
 
@@ -268,12 +265,18 @@ class _CameraHomeState extends State<CameraHome>
     }
   }
 
+  ///
+  /// 사진찍는 이벤트
+  ///
   void onTakePictureButtonPressed() {
     // process true;
     isProgress = true;
     // take picture
+    NoticeUtils.showSnackBarLongTime(_scaffoldKey, '사진을 찍기위해 준비중에 있습니다.');
     takePicture().then((XFile file) async {
-      showInSnackBar('사진을 처리중입니다. 처리 되면 자동으로 화면이 종료 됩니다.');
+      NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+      NoticeUtils.showSnackBarLongTime(
+          _scaffoldKey, '사진을 처리중입니다. 처리 되면 자동으로 화면이 종료 됩니다.');
       if (mounted) {
         setState(() {
           imageFile = file;
@@ -297,11 +300,14 @@ class _CameraHomeState extends State<CameraHome>
               ImageEngineResponse.fromJson(response.data);
           ApiService.insert(result);
           File(file.path).delete(recursive: true);
+          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
           Navigator.pop(context);
         } else {
+          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
           isProgress = false;
           File(file.path).delete(recursive: true);
-          showInSnackBar('error ${response.statusMessage}');
+          NoticeUtils.showSnackBar(
+              _scaffoldKey, 'error ${response.statusMessage}');
         }
       }
     });
@@ -309,7 +315,7 @@ class _CameraHomeState extends State<CameraHome>
 
   Future<XFile> takePicture() async {
     if (!controller.value.isInitialized) {
-      showInSnackBar('카메라를 선택해주세요');
+      NoticeUtils.showSnackBar(_scaffoldKey, '카메라를 선택해주세요');
       return null;
     }
     if (controller.value.isTakingPicture) {
@@ -319,15 +325,14 @@ class _CameraHomeState extends State<CameraHome>
     try {
       return await controller.takePicture();
     } on CameraException catch (e) {
-      print("error");
       _showCameraException(e);
       return null;
     }
   }
 
   void _showCameraException(CameraException e) {
-    print(e);
-    showInSnackBar('Error: ${e.code}\n${e.description}');
+    NoticeUtils.showSnackBar(
+        _scaffoldKey, '에러 발생: ${e.code}\n${e.description}');
   }
 
   Future<File> fixExifRotation(String imagePath) async {
@@ -342,12 +347,10 @@ class _CameraHomeState extends State<CameraHome>
     final exifData = await readExifFromBytes(imageBytes);
 
     img.Image fixedImage;
-    print('p : ${exifData}');
     // fixedImage = img.copyRotate(originalImage, 0);
     if (height < width) {
       // rotate
       if (exifData['Image Orientation'].printable.contains('Rotated 90')) {
-        print('change');
         fixedImage = img.copyRotate(originalImage, 270);
       } else if (exifData['Image Orientation'].printable.contains('180')) {
         fixedImage = img.copyRotate(originalImage, -90);

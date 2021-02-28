@@ -36,11 +36,9 @@ class ApiService {
     final Database db = await getDB();
     User user = await getUser();
     if (user == null) {
-      print("init user!!");
       //test
       //30e4a133-6832-56ee-b15e-b274b3983188
       String uid = Uuid().v1().toString();
-      print("uuid : ${uid}");
       db.insert("user", User(uid: uid, pushId: pushId).toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
     } else {
@@ -56,6 +54,7 @@ class ApiService {
     List<Map<String, dynamic>> user = await db.query("user");
     List<User> u = List.generate(user.length, (index) {
       //test
+      // 30e4a133-6832-56ee-b15e-b274b3983188
       return User(uid: "30e4a133-6832-56ee-b15e-b274b3983188", pushId: user[index]['push_id']);
       // return User(uid: user[index]['uid'], pushId: user[index]['push_id']);
     });
@@ -78,12 +77,10 @@ class ApiService {
         "http://gsapi.grepiu.com:8080/prototype/engine/images/?uid=${uid}");
     if (response.statusCode == 200) {
       if(response.data == null || response.data == "") {
-        print("null");
         return;
       }
       ImageEngineListResponse l =
           ImageEngineListResponse.fromJson(response.data);
-      print("test : ${l.list.length}");
       List<ImageEngineResponse> list = await fetch();
       l.list.reversed.forEach((dbObj) {
         insert(dbObj);
@@ -102,7 +99,6 @@ class ApiService {
 
     final List<Map<String, dynamic>> maps =
         await db.query('image_engine', orderBy: "idx DESC");
-    print(maps);
     // List<Map<String, dynamic>를 List<Dog>으로 변환합니다.
     return List.generate(maps.length, (i) {
       return ImageEngineResponse(
@@ -115,7 +111,6 @@ class ApiService {
   }
 
   static Future<void> delete(String id) async {
-    print("delete ${id}");
     // 데이터베이스 reference를 얻습니다.
     final db = await getDB();
 

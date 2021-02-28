@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_face_app/domain/image_engine_response.dart';
 import 'package:flutter_face_app/domain/result.dart';
+import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:flutter_face_app/utils/rank_utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
@@ -30,11 +31,11 @@ class MainDetail extends StatefulWidget {
 
 class MainDetailState extends State<MainDetail> {
   bool isProcess = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey _globalKey = new GlobalKey();
 
   Future<Uint8List> _capturePng() async {
     try {
-      print('inside');
       RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
@@ -42,8 +43,6 @@ class MainDetailState extends State<MainDetail> {
           await image.toByteData(format: ui.ImageByteFormat.png);
       var pngBytes = byteData.buffer.asUint8List();
       var bs64 = base64Encode(pngBytes);
-      print(pngBytes);
-      print(bs64);
       setState(() {});
       return pngBytes;
     } catch (e) {
@@ -56,34 +55,43 @@ class MainDetailState extends State<MainDetail> {
     Result result = RankUtils.parser(widget.imageEngineResponse.json);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      key: _scaffoldKey,
       bottomNavigationBar: Container(
         height: 55,
         color: Colors.transparent,
-      ),
-      appBar: AppBar(
-        title: Text("뒤로가기"),
-        actions: [
-          FlatButton.icon(
-              color: Colors.transparent,
-              onPressed: () async {
-                final tempDir = await getTemporaryDirectory();
-                final file =
-                    await new File('${tempDir.path}/image.jpg').create();
-                file.writeAsBytesSync(await _capturePng());
-                // 공유
-                await Share.shareFiles(['${tempDir.path}/image.jpg'],
-                    subject: "공유");
-                // 삭제
-                file.delete();
-              },
-              icon: Icon(Icons.share),
-              label: Text("공유하기"))
-        ],
       ),
       body: widget.imageEngineResponse == null
           ? SizedBox()
           : Column(
               children: [
+                AppBar(
+                  iconTheme: IconThemeData(
+                    color: Colors.black54, //change your color here
+                  ),
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  title: Text("뒤로가기", style: TextStyle(color: Colors.black54),),
+                  actions: [
+                    FlatButton.icon(
+                        color: Colors.transparent,
+                        onPressed: () async {
+                          NoticeUtils.showSnackBar(_scaffoldKey, "공유를 준비합니다.");
+                          final tempDir = await getTemporaryDirectory();
+                          final file =
+                          await new File('${tempDir.path}/image.jpg').create();
+                          file.writeAsBytesSync(await _capturePng());
+                          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+                          // 공유
+                          await Share.shareFiles(['${tempDir.path}/image.jpg'],
+                              subject: "공유");
+                          // 삭제
+                          file.delete();
+                        },
+                        icon: Icon(Icons.share),
+                        label: Text("공유하기"))
+                  ],
+                ),
                 Expanded(
                     child: RepaintBoundary(
                   key: _globalKey,

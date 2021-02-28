@@ -23,12 +23,10 @@ class EmotionUtils {
       ..sort((k1, k2) => emotion[k1].compareTo(emotion[k2]));
     LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedKeys,
         key: (k) => k, value: (k) => emotion[k]);
-    print("sort : ${sortedMap}");
     return sortedMap.entries.last;
   }
 
   static String getEmotionStatus(MapEntry entry) {
-    print("getEmotion : ${entry}");
     String emotionStatus;
     switch(entry.key) {
       case "neutral":
@@ -57,13 +55,13 @@ class EmotionUtils {
   }
 
   static int getAffection(Map<String, double> emotion) {
-    final int addNeutral = 0;
+    final int addNeutral = 1;
     final int addHappy = 3;
     final int addSad = -1;
     final int addSurprise = 1;
-    final int addFear = -2;
-    final int addDisgust = -3;
-    final int addAngry = -3;
+    final int addFear = -1;
+    final int addDisgust = -1;
+    final int addAngry = -1;
 
     num totalScore = 0;
 
@@ -98,10 +96,12 @@ class EmotionUtils {
   static String getAffectionStatus(int score) {
     String status = "";
     if(score > 100) {
-      status = "천년에 한번 나오는 찐사랑!!";
-    }  else if(score < 50 && score > 0){
-      status = "평범한 사랑!!";
-    } else {
+      status = "연예 초기신가요 ?\n둘은 애절한 사랑을 하고 계시네요!!";
+    }  else if(score < 100 && score > 50){
+      status = "적당한 온도...\n좋은 관계시군요!!";
+    } else if(score < 50 && score > 0){
+      status = "사랑을 하고 있긴 합니다..!!";
+    }else {
       status = "우리는 남보다 못한 사이";
     }
 

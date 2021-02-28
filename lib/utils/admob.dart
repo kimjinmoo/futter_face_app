@@ -33,8 +33,8 @@ class Ads {
       ..show(anchorOffset: 0.0, anchorType: AnchorType.bottom);
   }
 
-  static void hideBannerAd() async {
-    await _bannerAd.dispose();
+  static void hideBannerAd() {
+    _bannerAd?.dispose();
     _bannerAd = null;
   }
 }

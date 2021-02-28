@@ -20,8 +20,6 @@ class SlidingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("image : ${imageUrl}");
-
     return Card(
         margin: EdgeInsets.only(left: 18, right: 18, bottom: 24),
         elevation: 6,

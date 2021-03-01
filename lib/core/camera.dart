@@ -72,33 +72,53 @@ class _CameraHomeState extends State<CameraHome>
     return Stack(
       children: [
         Align(
-          alignment: Alignment.bottomLeft,
-          child: FloatingActionButton.extended(
-            heroTag: "btn_take1",
-            icon: Icon(Icons.flip_camera_android),
-            backgroundColor: Colors.blue,
-            label: isFront ? Text("전면") : Text("후방"),
-            onPressed: () {
-              onNewCameraSelected(widget.cameras);
-              setState(() {});
-            },
-          ),
-        ),
+            alignment: Alignment.bottomLeft,
+            child: FloatingActionButton(
+              heroTag: "btn_take1",
+              child: Icon(Icons.flip_camera_android),
+              backgroundColor: Colors.blue,
+              onPressed: () {
+                onNewCameraSelected(widget.cameras);
+                setState(() {});
+              },
+            )
+            // FloatingActionButton.extended(
+            //   heroTag: "btn_take1",
+            //   icon: Icon(Icons.flip_camera_android),
+            //   backgroundColor: Colors.blue,
+            //   label: SizedBox(),
+            //   onPressed: () {
+            //     onNewCameraSelected(widget.cameras);
+            //     setState(() {});
+            //   },
+            // ),
+            ),
         Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton.extended(
-            heroTag: "btn_take2",
-            icon: Icon(Icons.camera),
-            backgroundColor: Colors.red,
-            label: Text("찍기"),
-            onPressed: isProgress
-                ? () {
-                    NoticeUtils.showSnackBar(
-                        _scaffoldKey, '분석중입니다..잠시만 기다려줴요.');
-                  }
-                : onTakePictureButtonPressed,
-          ),
-        )
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              heroTag: "btn_take2",
+              child: Icon(Icons.camera),
+              backgroundColor: Colors.red,
+              onPressed: isProgress
+                  ? () {
+                      NoticeUtils.showSnackBar(
+                          _scaffoldKey, '분석중입니다..잠시만 기다려줴요.');
+                    }
+                  : onTakePictureButtonPressed,
+            )
+            // FloatingActionButton.extended(
+            //   heroTag: "btn_take2",
+            //   icon: Icon(Icons.camera),
+            //   backgroundColor: Colors.red,
+            //   label: Text(""),
+            //   onPressed: isProgress
+            //       ? () {
+            //           NoticeUtils.showSnackBar(
+            //               _scaffoldKey, '분석중입니다..잠시만 기다려줴요.');
+            //         }
+            //       : onTakePictureButtonPressed,
+            // ),
+            )
       ],
     );
   }

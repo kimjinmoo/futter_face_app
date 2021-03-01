@@ -40,7 +40,7 @@ class Result {
 
   Result isSingle(RankResponse rankResponse) {
     this.leftPeople = PeopleResult().init(rankResponse);
-    this.comment = "[${leftPeople.emotionStatus}] 셀카를 찍으셨군요?";
+    this.comment = "셀카를 찍으셨군요?";
     this.affectionStatus = "혼자 셀카를 찍으셨군요!";
     return this;
   }

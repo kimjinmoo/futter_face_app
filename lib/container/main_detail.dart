@@ -71,7 +71,10 @@ class MainDetailState extends State<MainDetail> {
                   ),
                   elevation: 0,
                   backgroundColor: Colors.transparent,
-                  title: Text("뒤로가기", style: TextStyle(color: Colors.black54),),
+                  title: Text(
+                    "뒤로가기",
+                    style: TextStyle(color: Colors.black54),
+                  ),
                   actions: [
                     FlatButton.icon(
                         color: Colors.transparent,
@@ -79,7 +82,8 @@ class MainDetailState extends State<MainDetail> {
                           NoticeUtils.showSnackBar(_scaffoldKey, "공유를 준비합니다.");
                           final tempDir = await getTemporaryDirectory();
                           final file =
-                          await new File('${tempDir.path}/image.jpg').create();
+                              await new File('${tempDir.path}/image.jpg')
+                                  .create();
                           file.writeAsBytesSync(await _capturePng());
                           NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
                           // 공유
@@ -116,42 +120,81 @@ class MainDetailState extends State<MainDetail> {
                         ),
                       ),
                       Align(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.topRight,
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          color: Colors.black26,
-                          padding: EdgeInsets.only(bottom: 20),
+                          margin: EdgeInsets.all(6),
                           child: Column(
                             children: [
-                              Text('${result.affectionStatus}',
-                                style: TextStyle(
-                                    fontSize: 28,
-                                    color: Colors.white),
-                              ),
-                              (result.leftPeople != null &&
-                                  result.rightPeople == null)
-                                  ? Container(
-                                child: Column(
-                                  children: [
-                                    Text("감정 : ${result.leftPeople.emotionStatus}", style: TextStyle(color: Colors.yellow, fontSize: 20),),
-                                  ],
-                                ),
+                              Opacity(
+                                opacity: 0.5,
+                                child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    color: Colors.black38,
+                                    child: Text(
+                                      "우리어때",
+                                      style: TextStyle(color: Colors.white),
+                                    )),
                               )
-                                  : SizedBox(),
-                              (result.leftPeople != null &&
-                                      result.rightPeople != null)
-                                  ? Container(
-                                child: Column(
-                                  children: [
-                                    Text("애정 스코어 : ${result.affection}", style: TextStyle(color: Colors.yellow),),
-                                    Text("더 좋아하는 사람 : ${result.sign}", style: TextStyle(color: Colors.yellow, fontSize: 20),),
-                                    Text("왼쪽 감정 : ${result.leftPeople.emotionStatus}", style: TextStyle(color: Colors.yellow, fontSize: 20),),
-                                    Text("오른쪽  감정 : ${result.leftPeople.emotionStatus}", style: TextStyle(color: Colors.yellow, fontSize: 20),),
-                                  ],
-                                ),
-                              )
-                                  : SizedBox()
                             ],
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: 170,
+                          color: Colors.black38,
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${result.affectionStatus}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 28,
+                                      color: Colors.white),
+                                ),
+                                (result.leftPeople != null &&
+                                        result.rightPeople == null)
+                                    ? Container(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "감정상태 : ${result.leftPeople.emotionStatus}",
+                                              style: TextStyle(
+                                                  color: Colors.amber,
+                                                  fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                (result.leftPeople != null &&
+                                        result.rightPeople != null)
+                                    ? Container(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "총 점수 : ${result.affection}",
+                                              style: TextStyle(
+                                                  color: Colors.pinkAccent,
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              "애정도 상세\n${result.leftPeople.affection} vs ${result.rightPeople.affection}",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
                           ),
                         ),
                       )

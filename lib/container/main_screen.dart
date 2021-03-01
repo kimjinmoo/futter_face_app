@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_face_app/service/api_service.dart';
 import 'package:flutter_face_app/utils/admob.dart';
 import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:flutter_face_app/utils/rank_utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 FirebaseMessaging messaging = FirebaseMessaging();
 
@@ -83,15 +81,24 @@ class MainScreenState extends State<MainScreen> with RouteAware {
     });
   }
 
-  _launchURL() async {
-    const url = 'https://flutter.dev';
-    print("call URL");
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      print("error ");
-      throw 'Could not launch $url';
+  _launchURL(type) async {
+    String url = "https://www.grepiu.com";
+    switch(type) {
+      case "home":
+        break;
+      case "license":
+        url = "http://data.grepiu.com/faceapp/ko_policies.html";
+        break;
+      case "policies":
+        url = "http://data.grepiu.com/faceapp/license.html";
+        break;
     }
+    // if (await canLaunch(url)) {
+    //   await launch(url);
+    // } else {
+    //   print("error ");
+    //   throw 'Could not launch $url';
+    // }
   }
 
   void open(MaterialPageRoute pageRoute) {
@@ -114,23 +121,27 @@ class MainScreenState extends State<MainScreen> with RouteAware {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 DrawerHeader(
-                  child: Text(uid),
+                  child: Text('ID\n${uid}', style: TextStyle(color: Colors.white),),
                   decoration: BoxDecoration(
-                    color: Colors.black26,
+                    color: Colors.black45,
                   ),
                 ),
                 ListTile(
                   title: Text('개발자 홈페이지'),
                   onTap: () {
-                    _launchURL();
+                    _launchURL("home");
                   },
                 ),
                 ListTile(
-                  title: Text('사용된 오픈소스'),
+                  title: Text('개인정보 수집안내'),
                   onTap: () {
-
-                    // Update the state of the app.
-                    // ...
+                    _launchURL("policies");
+                  },
+                ),
+                ListTile(
+                  title: Text('open source license'),
+                  onTap: () {
+                    _launchURL("license");
                   },
                 ),
                 Divider(),
@@ -247,7 +258,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      "사진을 찍고 애정도를 측정해보세요\n사진은 다양하게 공유 할 수 있습니다.",
+                      "애정도를 측정해보세요\n사진을 다양하게 공유 할 수 있습니다.",
                       style: TextStyle(fontSize: 20),
                     ),
                   ),

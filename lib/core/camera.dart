@@ -105,20 +105,7 @@ class _CameraHomeState extends State<CameraHome>
                           _scaffoldKey, '분석중입니다..잠시만 기다려줴요.');
                     }
                   : onTakePictureButtonPressed,
-            )
-            // FloatingActionButton.extended(
-            //   heroTag: "btn_take2",
-            //   icon: Icon(Icons.camera),
-            //   backgroundColor: Colors.red,
-            //   label: Text(""),
-            //   onPressed: isProgress
-            //       ? () {
-            //           NoticeUtils.showSnackBar(
-            //               _scaffoldKey, '분석중입니다..잠시만 기다려줴요.');
-            //         }
-            //       : onTakePictureButtonPressed,
-            // ),
-            )
+            ))
       ],
     );
   }
@@ -296,7 +283,7 @@ class _CameraHomeState extends State<CameraHome>
     takePicture().then((XFile file) async {
       NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
       NoticeUtils.showSnackBarLongTime(
-          _scaffoldKey, '사진을 처리중입니다. 처리 되면 자동으로 화면이 종료 됩니다.');
+          _scaffoldKey, '사진을 분석중입니다. 완료 되면 자동으로 화면이 종료 됩니다.');
       if (mounted) {
         setState(() {
           imageFile = file;

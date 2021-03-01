@@ -11,6 +11,7 @@ import 'package:flutter_face_app/service/api_service.dart';
 import 'package:flutter_face_app/utils/admob.dart';
 import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:flutter_face_app/utils/rank_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 FirebaseMessaging messaging = FirebaseMessaging();
 
@@ -87,18 +88,17 @@ class MainScreenState extends State<MainScreen> with RouteAware {
       case "home":
         break;
       case "license":
-        url = "http://data.grepiu.com/faceapp/ko_policies.html";
-        break;
-      case "policies":
         url = "http://data.grepiu.com/faceapp/license.html";
         break;
+      case "policies":
+        url = "http://data.grepiu.com/faceapp/ko_policies.html";
+        break;
     }
-    // if (await canLaunch(url)) {
-    //   await launch(url);
-    // } else {
-    //   print("error ");
-    //   throw 'Could not launch $url';
-    // }
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      NoticeUtils.showSnackBar(_scaffoldKey, "서버에 문제가 생겼습니다.");
+    }
   }
 
   void open(MaterialPageRoute pageRoute) {

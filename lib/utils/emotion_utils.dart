@@ -30,25 +30,25 @@ class EmotionUtils {
     String emotionStatus;
     switch(entry.key) {
       case "neutral":
-        emotionStatus = "무표정";
+        emotionStatus = "아무생각없음";
         break;
       case "sad":
-        emotionStatus = "슬픔";
+        emotionStatus = "개슬픔";
         break;
       case "surprise":
-        emotionStatus = "놀람";
+        emotionStatus = "개놀람";
         break;
       case "happy":
-        emotionStatus = "행복";
+        emotionStatus = "찐행복";
         break;
       case "fear":
-        emotionStatus = "공포";
+        emotionStatus = "찐공포";
         break;
       case "disgust":
-        emotionStatus = "싫음";
+        emotionStatus = "개싫음";
         break;
       case "angry":
-        emotionStatus = "화남";
+        emotionStatus = "개화남";
         break;
     }
     return emotionStatus;

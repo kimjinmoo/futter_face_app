@@ -18,7 +18,6 @@ class ImageEngineResponse {
   }
 
   factory ImageEngineResponse.fromJson(Map<String, dynamic> json) {
-    print("factory : ${json}");
     return ImageEngineResponse(
         id: json['id'],
         imageUrl: json['imageUrl'],

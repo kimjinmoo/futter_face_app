@@ -78,7 +78,7 @@ class SlidingCard extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       child: Text(
                         comment,
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
                   ))

@@ -259,7 +259,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                     padding: const EdgeInsets.all(8),
                     child: Text(
                       "애정도를 측정해보세요\n사진을 다양하게 공유 할 수 있습니다.",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ))

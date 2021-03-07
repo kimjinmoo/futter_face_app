@@ -96,13 +96,15 @@ class EmotionUtils {
   static String getAffectionStatus(int score) {
     String status = "";
     if(score > 100) {
-      status = "연예 초기신가요 ?\n둘은 애절한 사랑을 하고 계시네요!!";
-    }  else if(score < 100 && score > 50){
-      status = "적당한 온도...\n좋은 관계시군요!!";
-    } else if(score < 50 && score > 0){
+      status = "연애 초기\n애절한 사랑을 하고 계시네요!!";
+    }  else if(score < 100 && score >= 50){
+      status = "따듯한 온도..\n좋은 관계시군요!!";
+    } else if(score < 50 && score >= 0){
       status = "사랑을 하고 있긴 합니다..!!";
-    }else {
+    } else if(score < 0 && score >= -50){
       status = "우리는 남보다 못한 사이";
+    } else {
+      status = "전시상황, 도망가세요";
     }
 
     return status;

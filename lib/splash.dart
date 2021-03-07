@@ -31,10 +31,11 @@ class _SplashState extends State<Splash>
             image: DecorationImage(
                 image: AssetImage("assets/images/splash.jpg"),
                 fit: BoxFit.cover)),
-        child: Center(
-          child: Text(
-            "커플들 모여라!",
-            style: TextStyle(color: Colors.white, fontSize: 40),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Text("1.0.0", style: TextStyle(color: Colors.white),),
           ),
         ),
       ),

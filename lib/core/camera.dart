@@ -261,8 +261,14 @@ class _CameraHomeState extends State<CameraHome>
 
     try {
       await controller.initialize();
-      _maxAvailableZoom = await controller.getMaxZoomLevel();
-      _minAvailableZoom = await controller.getMinZoomLevel();
+      await Future.wait([
+        controller
+            .getMaxZoomLevel()
+            .then((value) => _maxAvailableZoom = value),
+        controller
+            .getMinZoomLevel()
+            .then((value) => _minAvailableZoom = value),
+      ]);
     } on CameraException catch (e) {
       _showCameraException(e);
     }
@@ -283,7 +289,7 @@ class _CameraHomeState extends State<CameraHome>
     takePicture().then((XFile file) async {
       NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
       NoticeUtils.showSnackBarLongTime(
-          _scaffoldKey, '사진을 분석중입니다. 완료 되면 자동으로 화면이 종료 됩니다.');
+          _scaffoldKey, '사진을 분석중입니다.\n완료 되면 자동으로 화면이 종료 됩니다.');
       if (mounted) {
         setState(() {
           imageFile = file;

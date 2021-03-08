@@ -27,7 +27,7 @@ class Result {
   PeopleResult rightPeople;
 
   Result isEmpty() {
-    this.comment = "분석이 안끝났습니다..";
+    this.comment = "분석중입니다..잠시 시다려주세요.";
     this.affectionStatus = "분석중입니다...";
     return this;
   }

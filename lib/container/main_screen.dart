@@ -69,8 +69,6 @@ class MainScreenState extends State<MainScreen> with RouteAware {
   }
 
   void firebaseCloudMessagingListeners() async {
-    print("enroll listeners");
-
     messaging.configure(onMessage: (Map<String, dynamic> message) async {
       onRef();
       print("onMessage: $message");

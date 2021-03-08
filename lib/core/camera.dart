@@ -289,7 +289,7 @@ class _CameraHomeState extends State<CameraHome>
     takePicture().then((XFile file) async {
       NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
       NoticeUtils.showSnackBarLongTime(
-          _scaffoldKey, '사진을 분석중입니다.\n완료 되면 자동으로 화면이 종료 됩니다.');
+          _scaffoldKey, '사진을 업로드중입니다.\n분석서버 요청 후 창이 전환 됩니다.');
       if (mounted) {
         setState(() {
           imageFile = file;

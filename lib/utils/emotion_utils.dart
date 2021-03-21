@@ -18,7 +18,7 @@ class EmotionUtils {
     return emotion;
   }
 
-  static MapEntry maxEmotion(Map<String, double> emotion) {
+  static MapEntry maxEmotion(Map emotion) {
     var sortedKeys = emotion.keys.toList(growable: false)
       ..sort((k1, k2) => emotion[k1].compareTo(emotion[k2]));
     LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedKeys,
@@ -27,8 +27,8 @@ class EmotionUtils {
   }
 
   static String getEmotionStatus(MapEntry entry) {
-    String emotionStatus;
-    switch(entry.key) {
+    String emotionStatus = "";
+    switch (entry.key) {
       case "neutral":
         emotionStatus = "아무생각없음";
         break;
@@ -54,7 +54,7 @@ class EmotionUtils {
     return emotionStatus;
   }
 
-  static int getAffection(Map<String, double> emotion) {
+  static int getAffection(Map emotion) {
     final int addNeutral = 1;
     final int addHappy = 3;
     final int addSad = -1;
@@ -95,16 +95,16 @@ class EmotionUtils {
 
   static String getAffectionStatus(int score) {
     String status = "";
-    if(score > 100) {
+    if (score > 100) {
       status = "연애 초기\n애절한 사랑을 하고 계시네요!!";
-    }  else if(score < 100 && score >= 50){
+    } else if (score < 100 && score >= 50) {
       status = "따듯한 온도..\n좋은 관계시군요!!";
-    } else if(score < 50 && score >= 0){
+    } else if (score < 50 && score >= 0) {
       status = "사랑을 하고 있긴 합니다..!!";
-    } else if(score < 0 && score >= -50){
+    } else if (score < 0 && score >= -50) {
       status = "우리는 남보다 못한 사이";
     } else {
-      status = "전시상황, 도망가세요";
+      status = "최악...만나면 안되는 상태";
     }
 
     return status;

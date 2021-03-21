@@ -5,7 +5,8 @@ class ImageEngineResponse {
   final String resultText;
   final String json;
 
-  ImageEngineResponse({this.idx, this.id, this.imageUrl, this.resultText, this.json});
+  ImageEngineResponse(
+      {this.idx, this.id, this.imageUrl, this.resultText, this.json});
 
   Map<String, dynamic> toMap() {
     return {
@@ -13,7 +14,7 @@ class ImageEngineResponse {
       'id': id,
       'imageUrl': imageUrl,
       'resultText': resultText,
-      'json': json == null?"":json
+      'json': json == null ? "" : json
     };
   }
 
@@ -22,7 +23,6 @@ class ImageEngineResponse {
         id: json['id'],
         imageUrl: json['imageUrl'],
         resultText: json['resultText'],
-        json: json['json']
-    );
+        json: json['json']);
   }
 }

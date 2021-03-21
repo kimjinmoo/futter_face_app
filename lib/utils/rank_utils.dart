@@ -29,6 +29,4 @@ class RankUtils {
       return Result().isNoPeople();
     }
   }
-
-
 }

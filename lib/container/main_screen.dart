@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_face_app/container/main_detail.dart';
 import 'package:flutter_face_app/container/sliding_card.dart';
 import 'package:flutter_face_app/core/camera.dart';
+import 'package:flutter_face_app/core/image_upload.dart';
 import 'package:flutter_face_app/domain/image_engine_response.dart';
 import 'package:flutter_face_app/domain/user.dart';
 import 'package:flutter_face_app/service/api_service.dart';
 import 'package:flutter_face_app/utils/admob.dart';
 import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:flutter_face_app/utils/rank_utils.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 FirebaseMessaging messaging = FirebaseMessaging();
@@ -119,7 +121,10 @@ class MainScreenState extends State<MainScreen> with RouteAware {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 DrawerHeader(
-                  child: Text('ID\n${uid}', style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    'ID\n${uid}',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black45,
                   ),
@@ -187,13 +192,16 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                     )
                   ],
                 ),
-                Expanded(
+                Container(
                     child: FutureBuilder<List<ImageEngineResponse>>(
                   future: ApiService.fetch(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<ImageEngineResponse> obj = snapshot.data;
-                      return _cardListView(obj);
+                      return Container(
+                        height: MediaQuery.of(context).size.height*0.7,
+                        child: _cardListView(obj),
+                      );
                     }
                     return Container(
                       child: Text('업로드된 이미지 없음'),
@@ -203,11 +211,14 @@ class MainScreenState extends State<MainScreen> with RouteAware {
               ],
             ),
           ),
-          floatingActionButton: _fab(),
+          floatingActionButton: Container(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
+            child: _fab(),
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           bottomNavigationBar: Container(
-            height: 55,
+            height: 50,
             color: Colors.transparent,
           )),
     );
@@ -238,7 +249,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                   height: 18,
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.55,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   child: Image.asset(
                     "assets/images/couple.jpg",
                     fit: BoxFit.fitWidth,
@@ -256,7 +267,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      "애정도를 측정해보세요\n사진을 다양하게 공유 할 수 있습니다.",
+                      "사진 분석을 통한 애정도 분석!!\n애정도로 친구와 소통해보시죠!!",
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
@@ -306,7 +317,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
             itemBuilder: (context, index) {
               return SizedBox(
                   width: MediaQuery.of(context).size.width * 0.90,
-                  height: MediaQuery.of(context).size.height * 0.55,
+                  height: MediaQuery.of(context).size.height * 0.65,
                   child: SlidingCard(
                     showDeleteHandler: () =>
                         showDeleteAlertDialog(data[index].id),
@@ -324,13 +335,32 @@ class MainScreenState extends State<MainScreen> with RouteAware {
   }
 
   Widget _fab() {
-    return FloatingActionButton.extended(
-        icon: Icon(Icons.camera),
-        label: Text("사진찍기"),
-        backgroundColor: Colors.red,
-        onPressed: () {
-          open(MaterialPageRoute(
-              builder: (context) => CameraHome(widget.cameras)));
-        });
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: FloatingActionButton.extended(
+              heroTag: "upload",
+              icon: Icon(Icons.add_a_photo_outlined),
+              label: Text("파일 업로드"),
+              backgroundColor: Colors.black,
+              onPressed: () {
+                open(MaterialPageRoute(builder: (context) => ImageUpload()));
+              }),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: FloatingActionButton.extended(
+              heroTag: "takePicture",
+              icon: Icon(Icons.camera),
+              label: Text("사진찍기"),
+              backgroundColor: Colors.deepOrange,
+              onPressed: () {
+                open(MaterialPageRoute(
+                    builder: (context) => CameraHome(widget.cameras)));
+              }),
+        )
+      ],
+    );
   }
 }

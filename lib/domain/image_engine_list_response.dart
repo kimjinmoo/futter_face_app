@@ -6,11 +6,12 @@ class ImageEngineListResponse {
   ImageEngineListResponse({this.list});
 
   factory ImageEngineListResponse.fromJson(dynamic json) {
-    return ImageEngineListResponse(
-        list: (json as List)
-            ?.map((e) => e == null
-            ? null
-            : ImageEngineResponse.fromJson(e as Map<String, dynamic>))
-            ?.toList());
+    dynamic obj = (json as List)
+        ?.map((e) => e == null
+        ? null
+        : ImageEngineResponse.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+
+    return ImageEngineListResponse(list: obj);
   }
 }

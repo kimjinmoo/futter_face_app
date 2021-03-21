@@ -1,15 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:dio/dio.dart';
-import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_face_app/domain/image_engine_response.dart';
-import 'package:flutter_face_app/domain/user.dart';
-import 'package:flutter_face_app/service/api_service.dart';
+import 'package:flutter_face_app/core/camera_image_edit.dart';
 import 'package:flutter_face_app/utils/notice_utils.dart';
-import 'package:image/image.dart' as img;
 
 class CameraHome extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -58,7 +52,7 @@ class _CameraHomeState extends State<CameraHome>
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      controller?.dispose();
+      controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (controller != null) {
         onNewCameraSelected(widget.cameras);
@@ -73,9 +67,10 @@ class _CameraHomeState extends State<CameraHome>
       children: [
         Align(
             alignment: Alignment.bottomLeft,
-            child: FloatingActionButton(
+            child: FloatingActionButton.extended(
               heroTag: "btn_take1",
-              child: Icon(Icons.flip_camera_android),
+              icon: Icon(Icons.flip_camera_android),
+              label: Text("전환"),
               backgroundColor: Colors.blue,
               onPressed: () {
                 onNewCameraSelected(widget.cameras);
@@ -95,9 +90,10 @@ class _CameraHomeState extends State<CameraHome>
             ),
         Align(
             alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
+            child: FloatingActionButton.extended(
               heroTag: "btn_take2",
-              child: Icon(Icons.camera),
+              icon: Icon(Icons.camera),
+              label: Text("찍기"),
               backgroundColor: Colors.red,
               onPressed: isProgress
                   ? () {
@@ -115,7 +111,7 @@ class _CameraHomeState extends State<CameraHome>
     return MaterialApp(
       home: Scaffold(
         bottomNavigationBar: Container(
-          height: 55,
+          height: 50,
           color: Colors.transparent,
         ),
         extendBodyBehindAppBar: true,
@@ -262,12 +258,8 @@ class _CameraHomeState extends State<CameraHome>
     try {
       await controller.initialize();
       await Future.wait([
-        controller
-            .getMaxZoomLevel()
-            .then((value) => _maxAvailableZoom = value),
-        controller
-            .getMinZoomLevel()
-            .then((value) => _minAvailableZoom = value),
+        controller.getMaxZoomLevel().then((value) => _maxAvailableZoom = value),
+        controller.getMinZoomLevel().then((value) => _minAvailableZoom = value),
       ]);
     } on CameraException catch (e) {
       _showCameraException(e);
@@ -281,49 +273,18 @@ class _CameraHomeState extends State<CameraHome>
   ///
   /// 사진찍는 이벤트
   ///
-  void onTakePictureButtonPressed() {
+  void onTakePictureButtonPressed() async {
     // process true;
     isProgress = true;
     // take picture
     NoticeUtils.showSnackBarLongTime(_scaffoldKey, '사진을 찍기위해 준비중에 있습니다.');
-    takePicture().then((XFile file) async {
-      NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-      NoticeUtils.showSnackBarLongTime(
-          _scaffoldKey, '사진을 업로드중입니다.\n분석서버 요청 후 창이 전환 됩니다.');
-      if (mounted) {
-        setState(() {
-          imageFile = file;
-        });
-        await fixExifRotation(file.path);
-        User user = await ApiService.getUser();
-        // 세로 모드 확인해야함
-        var response = await new Dio()
-            .post("http://gsapi.grepiu.com:8080/prototype/engine/images",
-                data: FormData.fromMap({
-                  "uid": user.uid,
-                  "pushId": user.pushId,
-                  "file": await MultipartFile.fromFile(file.path,
-                      filename: file.name)
-                }))
-            .catchError((e) {
-          print('e : ${e}');
-        });
-        if (response.statusCode == 200) {
-          ImageEngineResponse result =
-              ImageEngineResponse.fromJson(response.data);
-          ApiService.insert(result);
-          File(file.path).delete(recursive: true);
-          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-          Navigator.pop(context);
-        } else {
-          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-          isProgress = false;
-          File(file.path).delete(recursive: true);
-          NoticeUtils.showSnackBar(
-              _scaffoldKey, 'error ${response.statusMessage}');
-        }
-      }
-    });
+    XFile file = await takePicture();
+    NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+    isProgress = false;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => CameraImageEdit(file)));
   }
 
   Future<XFile> takePicture() async {
@@ -346,35 +307,5 @@ class _CameraHomeState extends State<CameraHome>
   void _showCameraException(CameraException e) {
     NoticeUtils.showSnackBar(
         _scaffoldKey, '에러 발생: ${e.code}\n${e.description}');
-  }
-
-  Future<File> fixExifRotation(String imagePath) async {
-    final originalFile = File(imagePath);
-    List<int> imageBytes = await originalFile.readAsBytes();
-
-    final originalImage = img.decodeImage(imageBytes);
-
-    final height = originalImage.height;
-    final width = originalImage.width;
-
-    final exifData = await readExifFromBytes(imageBytes);
-
-    img.Image fixedImage;
-    // fixedImage = img.copyRotate(originalImage, 0);
-    if (height < width) {
-      // rotate
-      if (exifData['Image Orientation'].printable.contains('Rotated 90')) {
-        fixedImage = img.copyRotate(originalImage, 270);
-      } else if (exifData['Image Orientation'].printable.contains('180')) {
-        fixedImage = img.copyRotate(originalImage, -90);
-      } else {
-        fixedImage = img.copyRotate(originalImage, 0);
-      }
-    }
-    //fixedImage = img.copyRotate(originalImage, 90);
-    final fixedFile =
-        await originalFile.writeAsBytes(img.encodeJpg(fixedImage, quality: 50));
-
-    return fixedFile;
   }
 }

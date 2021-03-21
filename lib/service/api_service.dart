@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 class ApiService {
   // 시작시 App을 초기화 한다.
   static void init(String fcmToken) {
+    print("message : ${fcmToken}");
     getDB();
     initUser(fcmToken);
   }
@@ -75,8 +76,9 @@ class ApiService {
     await deleteAll();
     Response response = await Dio().get(
         "http://gsapi.grepiu.com:8080/prototype/engine/images/?uid=${uid}");
+    print("response : ${response}");
     if (response.statusCode == 200) {
-      if(response.data == null || response.data == "") {
+      if (response.data == null || response.data == "") {
         return;
       }
       ImageEngineListResponse l =
@@ -114,9 +116,10 @@ class ApiService {
     // 데이터베이스 reference를 얻습니다.
     final db = await getDB();
 
-    Response response = await Dio().delete("http://gsapi.grepiu.com:8080/prototype/engine/image/${id}");
+    Response response = await Dio()
+        .delete("http://gsapi.grepiu.com:8080/prototype/engine/image/${id}");
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       // 데이터베이스에서 Dog를 삭제합니다.
       await db.delete(
         'image_engine',
@@ -131,8 +134,19 @@ class ApiService {
     final db = await getDB();
 
     // 데이터베이스에서 Dog를 삭제합니다.
-    await db.delete(
-      'image_engine'
-    );
+    await db.delete('image_engine');
+  }
+
+  static Future<Response<dynamic>> uploadImage(
+      {User user, String filePath, String fileName}) async {
+    // 세로 모드 확인해야함
+    return await new Dio()
+        .post("http://gsapi.grepiu.com:8080/prototype/engine/images",
+            data: FormData.fromMap({
+              "uid": user.uid,
+              "pushId": user.pushId,
+              "file": await MultipartFile.fromFile(filePath, filename: fileName)
+            }))
+        .catchError((e) {});
   }
 }

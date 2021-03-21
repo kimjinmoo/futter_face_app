@@ -46,19 +46,19 @@ class SlidingCard extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 18,
+                    height: 5,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.55,
+                    height: MediaQuery.of(context).size.height * 0.45,
                     child: RotatedBox(
-                      quarterTurns: 1,
+                      quarterTurns: 0,
                       child: CachedNetworkImage(
                         imageUrl: imageUrl,
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: imageProvider,
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.contain,
                             ),
                           ),
                         ),

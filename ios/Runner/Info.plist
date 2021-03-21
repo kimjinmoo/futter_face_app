@@ -21,13 +21,15 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<string>NO</string>
+	<false/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-2887406119671521~4124873224</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+  <string>이미지 분석을 위해 갤러리를 사용하려고 합니다. 사용 하시겠습니까?</string>
 	<key>NSCameraUsageDescription</key>
 	<string>이미지 분석을 위해 카메라를 사용하려고 합니다. 사용 하시겠습니까?</string>
 	<key>NSMicrophoneUsageDescription</key>

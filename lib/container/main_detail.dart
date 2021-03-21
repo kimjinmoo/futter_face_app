@@ -54,11 +54,12 @@ class MainDetailState extends State<MainDetail> {
   Widget build(BuildContext context) {
     Result result = RankUtils.parser(widget.imageEngineResponse.json);
 
+    print("result : ${widget.imageEngineResponse.imageUrl}");
     return Scaffold(
       extendBodyBehindAppBar: true,
       key: _scaffoldKey,
       bottomNavigationBar: Container(
-        height: 55,
+        height: 50,
         color: Colors.transparent,
       ),
       body: widget.imageEngineResponse == null
@@ -102,14 +103,14 @@ class MainDetailState extends State<MainDetail> {
                   child: Stack(
                     children: [
                       RotatedBox(
-                        quarterTurns: 1,
+                        quarterTurns: 0,
                         child: CachedNetworkImage(
                           imageUrl: widget.imageEngineResponse.imageUrl,
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 image: imageProvider,
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
@@ -153,7 +154,7 @@ class MainDetailState extends State<MainDetail> {
                                   '${result.affectionStatus}',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 28,
+                                      fontSize: 25,
                                       color: Colors.white),
                                 ),
                                 (result.leftPeople != null &&
@@ -176,19 +177,53 @@ class MainDetailState extends State<MainDetail> {
                                     ? Container(
                                         child: Column(
                                           children: [
-                                            Text(
-                                              "총 점수 : ${result.affection}",
-                                              style: TextStyle(
-                                                  color: Colors.pinkAccent,
-                                                  fontSize: 28,
-                                                  fontWeight: FontWeight.bold),
+                                            Padding(
+                                              padding: EdgeInsets.all(2),
+                                              child: Text(
+                                                "총 점수",
+                                                style: TextStyle(
+                                                    color: Colors.white54,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            new Opacity(
+                                                opacity: 1.0,
+                                                child: new Container(
+                                                    height: 50.0,
+                                                    width: 50.0,
+                                                    decoration:
+                                                        new ShapeDecoration(
+                                                      shape: new CircleBorder(
+                                                          side:
+                                                              BorderSide.none),
+                                                      color: Colors.pink,
+                                                    ),
+                                                    child: new Center(
+                                                        child: new Text(
+                                                      "${result.affection}",
+                                                      style: new TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 15.0),
+                                                    )))),
+                                            Padding(
+                                              padding: EdgeInsets.all(2),
+                                              child: Text(
+                                                "애정도 상세",
+                                                style: TextStyle(
+                                                    color: Colors.white54,
+                                                    fontSize: 15),
+                                              ),
                                             ),
                                             Text(
-                                              "애정도 상세\n${result.leftPeople.affection} vs ${result.rightPeople.affection}",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18),
-                                            )
+                                                "${result.leftPeople.affection} vs ${result.rightPeople.affection}",
+                                                style: new TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15.0))
                                           ],
                                         ),
                                       )

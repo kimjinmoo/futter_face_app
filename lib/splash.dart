@@ -35,7 +35,7 @@ class _SplashState extends State<Splash>
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Text("1.0.0", style: TextStyle(color: Colors.white),),
+            child: Text("1.0.2", style: TextStyle(color: Colors.white),),
           ),
         ),
       ),

@@ -62,7 +62,8 @@ class Result {
   }
 
   Result isAboveThree() {
-    this.comment = "사람이 여려명이시네요...";
+    this.comment = "다수의 사람이 포착되었습니다.";
+    this.affectionStatus = "커플만 가능해요!";
     return this;
   }
 }

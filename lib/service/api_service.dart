@@ -12,7 +12,6 @@ import 'package:uuid/uuid.dart';
 class ApiService {
   // 시작시 App을 초기화 한다.
   static void init(String fcmToken) {
-    print("message : ${fcmToken}");
     getDB();
     initUser(fcmToken);
   }
@@ -76,7 +75,6 @@ class ApiService {
     await deleteAll();
     Response response = await Dio().get(
         "http://gsapi.grepiu.com:8080/prototype/engine/images/?uid=${uid}");
-    print("response : ${response}");
     if (response.statusCode == 200) {
       if (response.data == null || response.data == "") {
         return;

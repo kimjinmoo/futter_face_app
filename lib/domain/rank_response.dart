@@ -30,8 +30,8 @@ class RankResponse {
         box: box,
         angry: emotions['angry'],
         disgust: emotions['disgust'],
-        happy: emotions['fear'],
-        fear: emotions['happy'],
+        happy: emotions['happy'],
+        fear: emotions['fear'],
         sad: emotions['sad'],
         surprise: emotions['surprise'],
         neutral: emotions['neutral']);

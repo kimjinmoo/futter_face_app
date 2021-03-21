@@ -35,7 +35,6 @@ class MainDetailState extends State<MainDetail> {
   Widget build(BuildContext context) {
     Result result = RankUtils.parser(widget.imageEngineResponse.json);
 
-    print("result : ${widget.imageEngineResponse.imageUrl}");
     return Scaffold(
         extendBodyBehindAppBar: false,
         key: _scaffoldKey,
@@ -72,7 +71,7 @@ class MainDetailState extends State<MainDetail> {
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             width: MediaQuery.of(context).size.width * 1,
-                            height: 170,
+                            height: 190,
                             color: Colors.black87,
                             padding: EdgeInsets.only(bottom: 20),
                             child: Center(
@@ -82,7 +81,7 @@ class MainDetailState extends State<MainDetail> {
                                     '${result.affectionStatus}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 25,
+                                        fontSize: 22,
                                         color: Colors.white),
                                   ),
                                   (result.leftPeople != null &&

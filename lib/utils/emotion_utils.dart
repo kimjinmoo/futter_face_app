@@ -56,7 +56,7 @@ class EmotionUtils {
 
   static int getAffection(Map emotion) {
     final int addNeutral = 1;
-    final int addHappy = 3;
+    final int addHappy = 1;
     final int addSad = -1;
     final int addSurprise = 1;
     final int addFear = -1;
@@ -95,12 +95,14 @@ class EmotionUtils {
 
   static String getAffectionStatus(int score) {
     String status = "";
-    if (score > 100) {
-      status = "연애 초기\n애절한 사랑을 하고 계시네요!!";
+    if (score > 150) {
+      status = "최고의 애정도!!\n정말 행복해 하시는군요!!";
+    } else if (score < 150 && score >= 100) {
+      status = "따듯한 사랑..\n좋은 관계시군요!!";
     } else if (score < 100 && score >= 50) {
-      status = "따듯한 온도..\n좋은 관계시군요!!";
+      status = "미지근한 사랑을 하고 있습니다..!";
     } else if (score < 50 && score >= 0) {
-      status = "사랑을 하고 있긴 합니다..!!";
+      status = "호감이 있긴 한거 같아요!!..!";
     } else if (score < 0 && score >= -50) {
       status = "우리는 남보다 못한 사이";
     } else {

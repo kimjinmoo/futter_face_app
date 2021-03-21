@@ -149,7 +149,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                 ),
                 Divider(),
                 ListTile(
-                  title: Text('1.0.0'),
+                  title: Text('1.0.2'),
                   onTap: () {
                     // Update the state of the app.
                     // ...

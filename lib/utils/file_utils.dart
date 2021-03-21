@@ -17,7 +17,7 @@ class FileUtils {
     final originalImage = img.decodeImage(imageBytes);
 
     String dir = (await getTemporaryDirectory()).path;
-    File temp = new File('$dir/${path.basename(originalFile.path)}');
+    File temp = new File('$dir/${path.basenameWithoutExtension(originalFile.path)}.jpg');
 
     final fixedFile = await temp
         .writeAsBytes(img.encodeJpg(originalImage, quality: compressRate));
@@ -30,17 +30,10 @@ class FileUtils {
   static Future<Uint8List> capturePng(GlobalKey key) async {
     try {
       RenderRepaintBoundary boundary = key.currentContext.findRenderObject();
-
-      if (boundary.debugNeedsPaint) {
-        print("Waiting for boundary to be painted.");
-        await Future.delayed(const Duration(milliseconds: 20));
-        return capturePng(key);
-      }
-
       ui.Image image = await boundary.toImage(pixelRatio: 3);
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
-      return byteData.buffer.asUint8List();;
+      return byteData.buffer.asUint8List();
     } catch (e) {
       print("error : ${e}");
     }

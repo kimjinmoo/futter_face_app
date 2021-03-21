@@ -42,30 +42,39 @@ class ImageUploadState extends State<ImageUpload> {
       setState(() {
         isProgress = true;
       });
-      NoticeUtils.showSnackBarLongTime(
-          _scaffoldKey, '잠시만 기다려주세요..사진을 확인하고 있습니다.');
-      File tempFile = await FileUtils.compressFile(
-          imagePath: _image.path, compressRate: 80);
-      User user = await ApiService.getUser();
-      // 세로 모드 확인해야함
-      var response = await ApiService.uploadImage(
-          user: user,
-          filePath: tempFile.path,
-          fileName: path.basename(tempFile.path));
-      if (response.statusCode == 200) {
-        ImageEngineResponse result =
-            ImageEngineResponse.fromJson(response.data);
-        ApiService.insert(result);
-        tempFile.delete(recursive: true);
-        NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-        isProgress = false;
-        Navigator.pop(context);
-      } else {
-        NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-        tempFile.delete(recursive: true);
+      try {
+        NoticeUtils.showSnackBarLongTime(
+            _scaffoldKey, '잠시만 기다려주세요..사진을 확인하고 있습니다.');
+        File tempFile = await FileUtils.compressFile(
+            imagePath: _image.path, compressRate: 80);
+        User user = await ApiService.getUser();
+        // 세로 모드 확인해야함
+        var response = await ApiService.uploadImage(
+            user: user,
+            filePath: tempFile.path,
+            fileName: path.basename(tempFile.path));
+        if (response.statusCode == 200) {
+          ImageEngineResponse result =
+          ImageEngineResponse.fromJson(response.data);
+          ApiService.insert(result);
+          tempFile.delete(recursive: true);
+          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+          Navigator.pop(context);
+        } else {
+          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+          tempFile.delete(recursive: true);
+          NoticeUtils.showSnackBar(
+              _scaffoldKey, 'error ${response.statusMessage}');
+          setState(() {
+            isProgress = false;
+          });
+        }
+      } catch(e) {
+        setState(() {
+          isProgress = false;
+        });
         NoticeUtils.showSnackBar(
-            _scaffoldKey, 'error ${response.statusMessage}');
-        isProgress = false;
+            _scaffoldKey, 'error ${e}');
       }
     }
   }

@@ -50,7 +50,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
   void init() async {
     User user = await ApiService.getUser();
     // 싱크 초기화
-    await ApiService.syncImageEngine(user.uid);
+    await ApiService.syncImageEngine(user.uid).catchError((e){print("e: ${e}");});
     // 유저 Set
     setState(() {
       this.uid = user.uid;

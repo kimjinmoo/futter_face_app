@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_face_app/domain/result.dart';
 import 'package:flutter_face_app/utils/file_utils.dart';
 import 'package:flutter_face_app/utils/notice_utils.dart';
 import 'package:flutter_face_app/utils/rank_utils.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
@@ -212,19 +214,57 @@ class MainDetailState extends State<MainDetail> {
         floatingActionButton: FloatingActionButton.extended(
           heroTag: "share",
           backgroundColor: Colors.amberAccent,
-          icon: Icon(Icons.share, color: Colors.black87,),
-          label: Text("공유", style: TextStyle(color: Colors.black87),),
+          icon: Icon(
+            Icons.share,
+            color: Colors.black87,
+          ),
+          label: Text(
+            "공유",
+            style: TextStyle(color: Colors.black87),
+          ),
           onPressed: () async {
-            NoticeUtils.showSnackBar(_scaffoldKey, "공유를 준비합니다.");
-            final tempDir = await getTemporaryDirectory();
-            final file = await new File('${tempDir.path}/image.jpg').create();
-            file.writeAsBytesSync(await FileUtils.capturePng(_globalKey));
-            NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-            // 공유
-            await Share.shareFiles(['${tempDir.path}/image.jpg'],
-                subject: "공유");
-            // 삭제
-            file.delete();
+            if(!isProcess) {
+              setState(() {
+                isProcess = true;
+              });
+              try {
+                NoticeUtils.showSnackBar(_scaffoldKey, "공유를 준비합니다.");
+                // path 패키지를 사용하여 이미지가 저장될 경로를 지정합니다.
+                final path = join(
+                  (await getTemporaryDirectory()).path,
+                  'image.png',
+                );
+                print("file : ${path}");
+                File file = new File(path);
+                print("file new: ${file.path}");
+                Uint8List img = await FileUtils.capturePng(_globalKey);
+                print("file img: ${img}");
+                await file.writeAsBytes(img);
+                print("file new write: ${file.path}");
+                // temp file
+                File tempFile = await FileUtils.compressFile(
+                    imagePath: file.path, compressRate: 90);
+                print("file : ${tempFile.path}");
+
+                NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+                // 공유
+                await Share.shareFiles(['${tempFile.path}'], text: "공유");
+                setState(() {
+                  this.isProcess = false;
+                });
+                // 삭제
+                tempFile.delete();
+                file.delete();
+              } catch (e) {
+                throw e;
+                setState(() {
+                  this.isProcess = false;
+                });
+                NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+                NoticeUtils.showSnackBar(_scaffoldKey, "Error : ${e}");
+              }
+            }
+
           },
           tooltip: '공유하기',
         ));

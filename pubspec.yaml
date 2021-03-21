@@ -26,7 +26,7 @@ dependencies:
     sdk: flutter
 
   camera: ^0.7.0+2
-  path_provider: ^1.6.18
+  path_provider: ^2.0.1
   path: ^1.7.0
   http: ^0.12.2
   dio: ^3.0.10
@@ -39,11 +39,10 @@ dependencies:
   uuid: ^2.2.2
   firebase_core: ^0.5.3
   firebase_messaging: ^7.0.3
-  share: ^0.6.5+4
+  share: ^2.0.1
   url_launcher: ^5.7.10
   google_mobile_ads: ^0.11.0+3
   image_picker: ^0.6.7+22
-  flutter_exif_rotation: ^0.4.0
 
 dev_dependencies:
   flutter_test:

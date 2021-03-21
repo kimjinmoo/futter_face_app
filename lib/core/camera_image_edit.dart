@@ -41,36 +41,48 @@ class CameraImageEditState extends State<CameraImageEdit> {
         this.isRequest = true;
       });
       NoticeUtils.showSnackBarLongTime(_scaffoldKey, '잠시 기다려주세요...사진을 분석중입니다.');
-      final tempDir = await getTemporaryDirectory();
-      final file = await new File('${tempDir.path}/image.png').create();
-      file.writeAsBytesSync(await FileUtils.capturePng(_globalKey));
-      // temp file
-      final tempFile =
-          await FileUtils.compressFile(imagePath: file.path, compressRate: 50);
-
-      User user = await ApiService.getUser();
-      // 세로 모드 확인해야함
-      var response = await ApiService.uploadImage(
-          user: user,
-          filePath: tempFile.path,
-          fileName: path.basename(tempFile.path));
-      if (response.statusCode == 200) {
-        ImageEngineResponse result =
-            ImageEngineResponse.fromJson(response.data);
-        ApiService.insert(result);
-        tempFile.delete();
-        file.delete(recursive: true);
+      try {
+        final tempPath = path.join(
+          (await getTemporaryDirectory()).path,
+          'cam_image.png',
+        );
+        File file = new File(tempPath);
+        await file.writeAsBytes(await FileUtils.capturePng(_globalKey));
+        // temp file
+        File tempFile = await FileUtils.compressFile(
+            imagePath: file.path, compressRate: 50);
+        print("temp : ${await tempFile.length()}");
+        User user = await ApiService.getUser();
+        // 세로 모드 확인해야함
+        var response = await ApiService.uploadImage(
+            user: user,
+            filePath: tempFile.path,
+            fileName: path.basename(tempFile.path));
+        print("response : ${response}");
+        if (response.statusCode == 200) {
+          ImageEngineResponse result =
+              ImageEngineResponse.fromJson(response.data);
+          ApiService.insert(result);
+          tempFile.delete();
+          file.delete(recursive: true);
+          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+          Navigator.pop(context);
+        } else {
+          setState(() {
+            this.isRequest = false;
+          });
+          NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
+          tempFile.delete();
+          file.delete(recursive: true);
+          NoticeUtils.showSnackBar(
+              _scaffoldKey, 'error ${response.statusMessage}');
+        }
+      } catch (e) {
         NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-        Navigator.pop(context);
-      } else {
         setState(() {
           this.isRequest = false;
         });
-        NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
-        tempFile.delete();
-        file.delete(recursive: true);
-        NoticeUtils.showSnackBar(
-            _scaffoldKey, 'error ${response.statusMessage}');
+        NoticeUtils.showSnackBar(_scaffoldKey, 'error ${e}');
       }
     }
   }
@@ -120,9 +132,11 @@ class CameraImageEditState extends State<CameraImageEdit> {
                   ),
                 ),
               ),
-              isRequest?LinearProgressIndicator(
-                backgroundColor: Colors.pink,
-              ):SizedBox(),
+              isRequest
+                  ? LinearProgressIndicator(
+                      backgroundColor: Colors.pink,
+                    )
+                  : SizedBox(),
               Positioned(
                 child: AppBar(
                   title: Text("뒤로가기"),

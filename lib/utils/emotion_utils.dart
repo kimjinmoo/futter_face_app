@@ -23,6 +23,7 @@ class EmotionUtils {
       ..sort((k1, k2) => emotion[k2].compareTo(emotion[k1]));
     LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedKeys,
         key: (k) => k, value: (k) => emotion[k]);
+    print(sortedMap);
     return sortedMap.entries.last;
   }
 
@@ -68,25 +69,25 @@ class EmotionUtils {
     for (var k in emotion.keys) {
       switch(k) {
         case "neutral":
-          totalScore+=(emotion[k]*100).ceil()*addNeutral;
+          totalScore+=emotion[k].ceil()*addNeutral;
           break;
         case "sad":
-          totalScore+=(emotion[k]*100).ceil()*addSad;
+          totalScore+=emotion[k].ceil()*addSad;
           break;
         case "surprise":
-          totalScore+=(emotion[k]*100).ceil()*addSurprise;
+          totalScore+=emotion[k].ceil()*addSurprise;
           break;
         case "happy":
-          totalScore+=(emotion[k]*100).ceil()*addHappy;
+          totalScore+=emotion[k].ceil()*addHappy;
           break;
         case "fear":
-          totalScore+=(emotion[k]*100).ceil()*addFear;
+          totalScore+=emotion[k].ceil()*addFear;
           break;
         case "disgust":
-          totalScore+=(emotion[k]*100).ceil()*addDisgust;
+          totalScore+=emotion[k].ceil()*addDisgust;
           break;
         case "angry":
-          totalScore+=(emotion[k]*100).ceil()*addAngry;
+          totalScore+=emotion[k].ceil()*addAngry;
           break;
       }
     }

@@ -212,9 +212,9 @@ class MainDetailState extends State<MainDetail> {
               )),
         floatingActionButton: FloatingActionButton.extended(
           heroTag: "share",
-          backgroundColor: Colors.black,
-          icon: Icon(Icons.share),
-          label: Text("공유"),
+          backgroundColor: Colors.amberAccent,
+          icon: Icon(Icons.share, color: Colors.black87,),
+          label: Text("공유", style: TextStyle(color: Colors.black87),),
           onPressed: () async {
             NoticeUtils.showSnackBar(_scaffoldKey, "공유를 준비합니다.");
             final tempDir = await getTemporaryDirectory();

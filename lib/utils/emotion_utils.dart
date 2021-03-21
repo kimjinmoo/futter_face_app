@@ -20,7 +20,7 @@ class EmotionUtils {
 
   static MapEntry maxEmotion(Map emotion) {
     var sortedKeys = emotion.keys.toList(growable: false)
-      ..sort((k1, k2) => emotion[k1].compareTo(emotion[k2]));
+      ..sort((k1, k2) => emotion[k2].compareTo(emotion[k1]));
     LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedKeys,
         key: (k) => k, value: (k) => emotion[k]);
     return sortedMap.entries.last;

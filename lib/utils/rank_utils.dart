@@ -19,7 +19,7 @@ class RankUtils {
           // String json = jsonEncode(response.people.asMap());
           Comparator<RankResponse> rankComparator =
               (RankResponse a, RankResponse b) =>
-                  a.box[0].toString().compareTo(b.box[0].toString());
+                  b.box[0].toString().compareTo(a.box[0].toString());
           response.people.sort(rankComparator);
           return Result().isCouple(response.people[0], response.people[1]);
         default:

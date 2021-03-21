@@ -83,8 +83,8 @@ class MainScreenState extends State<MainScreen> with RouteAware {
   }
 
   _launchURL(type) async {
-    String url = "https://www.grepiu.com";
-    switch(type) {
+    String url = "https://www.grepiu.com/support";
+    switch (type) {
       case "home":
         break;
       case "license":
@@ -130,7 +130,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                   ),
                 ),
                 ListTile(
-                  title: Text('개발자 홈페이지'),
+                  title: Text('문의하기'),
                   onTap: () {
                     _launchURL("home");
                   },
@@ -169,10 +169,22 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                       padding: EdgeInsets.all(20),
                       alignment: Alignment.topLeft,
                       height: 75,
-                      child: Text(
-                        "우리 어때?",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Image.asset(
+                              "assets/images/icon.jpg",
+                              height: 50,
+                              width: 50,
+                            ),
+                          ),
+                          Text(
+                            "우리 어때?",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          )
+                        ],
                       ),
                     )),
                     InkWell(
@@ -199,7 +211,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                     if (snapshot.hasData) {
                       List<ImageEngineResponse> obj = snapshot.data;
                       return Container(
-                        height: MediaQuery.of(context).size.height*0.7,
+                        height: MediaQuery.of(context).size.height * 0.7,
                         child: _cardListView(obj),
                       );
                     }
@@ -342,7 +354,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
           child: FloatingActionButton.extended(
               heroTag: "upload",
               icon: Icon(Icons.add_a_photo_outlined),
-              label: Text("파일 업로드"),
+              label: Text("이미지"),
               backgroundColor: Colors.black,
               onPressed: () {
                 open(MaterialPageRoute(builder: (context) => ImageUpload()));
@@ -353,7 +365,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
           child: FloatingActionButton.extended(
               heroTag: "takePicture",
               icon: Icon(Icons.camera),
-              label: Text("사진찍기"),
+              label: Text("카메라"),
               backgroundColor: Colors.deepOrange,
               onPressed: () {
                 open(MaterialPageRoute(

@@ -70,7 +70,7 @@ class _CameraHomeState extends State<CameraHome>
             child: FloatingActionButton.extended(
               heroTag: "btn_take1",
               icon: Icon(Icons.flip_camera_android),
-              label: Text("전환"),
+              label: isFront?Text("전면"):Text("후면"),
               backgroundColor: Colors.blue,
               onPressed: () {
                 onNewCameraSelected(widget.cameras);
@@ -110,6 +110,7 @@ class _CameraHomeState extends State<CameraHome>
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.black,
         bottomNavigationBar: Container(
           height: 50,
           color: Colors.transparent,
@@ -277,7 +278,7 @@ class _CameraHomeState extends State<CameraHome>
     // process true;
     isProgress = true;
     // take picture
-    NoticeUtils.showSnackBarLongTime(_scaffoldKey, '사진을 찍기위해 준비중에 있습니다.');
+    NoticeUtils.showSnackBarLongTime(_scaffoldKey, '편집을 위해 준비합니다.잠시 기다려주세요.');
     XFile file = await takePicture();
     NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
     isProgress = false;

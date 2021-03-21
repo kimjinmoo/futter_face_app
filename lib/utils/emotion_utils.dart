@@ -23,7 +23,6 @@ class EmotionUtils {
       ..sort((k1, k2) => emotion[k2].compareTo(emotion[k1]));
     LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedKeys,
         key: (k) => k, value: (k) => emotion[k]);
-    print(sortedMap);
     return sortedMap.entries.last;
   }
 

@@ -51,14 +51,12 @@ class CameraImageEditState extends State<CameraImageEdit> {
         // temp file
         File tempFile = await FileUtils.compressFile(
             imagePath: file.path, compressRate: 50);
-        print("temp : ${await tempFile.length()}");
         User user = await ApiService.getUser();
         // 세로 모드 확인해야함
         var response = await ApiService.uploadImage(
             user: user,
             filePath: tempFile.path,
             fileName: path.basename(tempFile.path));
-        print("response : ${response}");
         if (response.statusCode == 200) {
           ImageEngineResponse result =
               ImageEngineResponse.fromJson(response.data);

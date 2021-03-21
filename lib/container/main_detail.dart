@@ -234,18 +234,12 @@ class MainDetailState extends State<MainDetail> {
                   (await getTemporaryDirectory()).path,
                   'image.png',
                 );
-                print("file : ${path}");
                 File file = new File(path);
-                print("file new: ${file.path}");
                 Uint8List img = await FileUtils.capturePng(_globalKey);
-                print("file img: ${img}");
                 await file.writeAsBytes(img);
-                print("file new write: ${file.path}");
                 // temp file
                 File tempFile = await FileUtils.compressFile(
                     imagePath: file.path, compressRate: 90);
-                print("file : ${tempFile.path}");
-
                 NoticeUtils.hideSnackBarLongTime(_scaffoldKey);
                 // 공유
                 await Share.shareFiles(['${tempFile.path}'], text: "공유");

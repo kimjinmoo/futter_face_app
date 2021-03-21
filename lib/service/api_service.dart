@@ -55,8 +55,8 @@ class ApiService {
     List<User> u = List.generate(user.length, (index) {
       //test
       // 30e4a133-6832-56ee-b15e-b274b3983188
-      return User(uid: "30e4a133-6832-56ee-b15e-b274b3983188", pushId: user[index]['push_id']);
-      // return User(uid: user[index]['uid'], pushId: user[index]['push_id']);
+      // return User(uid: "30e4a133-6832-56ee-b15e-b274b3983188", pushId: user[index]['push_id']);
+      return User(uid: user[index]['uid'], pushId: user[index]['push_id']);
     });
     return u.length > 0 ? u[0] : null;
   }
